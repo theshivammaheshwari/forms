@@ -7,6 +7,7 @@ interface FormData {
   name: string;
   id: string;
   department: string;
+  otherDepartment?: string;
   email: string;
   mobile: string;
   items: Array<{
@@ -18,12 +19,24 @@ interface FormData {
   }>;
 }
 
+const departments = [
+  'Communication and Computer Engineering',
+  'Computer Science and Engineering',
+  'Electronics and Communication Engineering',
+  'Mechanical-Mechatronics Engineering',
+  'Physics',
+  'Mathematics',
+  'Humanities and Social Sciences',
+  'Others'
+] as const;
+
 function App() {
   const [formData, setFormData] = useState<FormData>({
     userType: 'student',
     name: '',
     id: '',
     department: '',
+    otherDepartment: '',
     email: '',
     mobile: '',
     items: [{ name: '', quantity: '', issueDate: '', returnDate: '', remark: '' }]
@@ -34,7 +47,13 @@ function App() {
   const [printData, setPrintData] = useState<FormData | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value,
+      // Reset otherDepartment when department changes to a non-"Others" option
+      ...(name === 'department' && value !== 'Others' && { otherDepartment: '' })
+    }));
   };
 
   const handleItemChange = (index: number, field: string, value: string) => {
@@ -75,7 +94,10 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          department: formData.department === 'Others' ? formData.otherDepartment : formData.department
+        }),
       });
       
       setPrintData({ ...formData });
@@ -99,6 +121,7 @@ function App() {
       name: '',
       id: '',
       department: '',
+      otherDepartment: '',
       email: '',
       mobile: '',
       items: [{ name: '', quantity: '', issueDate: '', returnDate: '', remark: '' }]
@@ -202,17 +225,35 @@ function App() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-              <div>
+              <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
-                <input
-                  type="text"
+                <select
                   name="department"
                   value={displayData.department}
                   onChange={handleInputChange}
                   className="w-full p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300"
                   required
                   disabled={submitted}
-                />
+                >
+                  <option value="">Select Department</option>
+                  {departments.map((dept) => (
+                    <option key={dept} value={dept}>
+                      {dept}
+                    </option>
+                  ))}
+                </select>
+                {formData.department === 'Others' && (
+                  <input
+                    type="text"
+                    name="otherDepartment"
+                    value={displayData.otherDepartment}
+                    onChange={handleInputChange}
+                    placeholder="Please specify department"
+                    className="w-full p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300 mt-2"
+                    required
+                    disabled={submitted}
+                  />
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Mobile No</label>
