@@ -8,6 +8,8 @@ interface FormData {
   id: string;
   department: string;
   otherDepartment?: string;
+  instructorName?: string;
+  hodName: string;
   email: string;
   mobile: string;
   items: Array<{
@@ -37,6 +39,8 @@ function App() {
     id: '',
     department: '',
     otherDepartment: '',
+    instructorName: '',
+    hodName: '',
     email: '',
     mobile: '',
     items: [{ name: '', quantity: '', issueDate: '', returnDate: '', remark: '' }]
@@ -52,7 +56,9 @@ function App() {
       ...prev,
       [name]: value,
       // Reset otherDepartment when department changes to a non-"Others" option
-      ...(name === 'department' && value !== 'Others' && { otherDepartment: '' })
+      ...(name === 'department' && value !== 'Others' && { otherDepartment: '' }),
+      // Reset instructor name when switching user type
+      ...(name === 'userType' && value === 'faculty' && { instructorName: '' })
     }));
   };
 
@@ -90,6 +96,16 @@ function App() {
     
     if (!formData.mobile.match(/^\d{10}$/)) {
       setError('Please enter a valid 10-digit mobile number');
+      return false;
+    }
+
+    if (formData.userType === 'student' && !formData.instructorName?.trim()) {
+      setError('Please enter the instructor name');
+      return false;
+    }
+
+    if (!formData.hodName?.trim()) {
+      setError('Please enter the HOD name');
       return false;
     }
 
@@ -141,6 +157,8 @@ function App() {
       id: '',
       department: '',
       otherDepartment: '',
+      instructorName: '',
+      hodName: '',
       email: '',
       mobile: '',
       items: [{ name: '', quantity: '', issueDate: '', returnDate: '', remark: '' }]
@@ -310,6 +328,41 @@ function App() {
               </div>
             </div>
 
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              {formData.userType === 'student' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Instructor Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="instructorName"
+                    value={displayData.instructorName}
+                    onChange={handleInputChange}
+                    placeholder="Enter instructor's name"
+                    className="w-full p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300"
+                    required
+                    disabled={submitted}
+                  />
+                </div>
+              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  HOD Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="hodName"
+                  value={displayData.hodName}
+                  onChange={handleInputChange}
+                  placeholder="Enter HOD's name"
+                  className="w-full p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300"
+                  required
+                  disabled={submitted}
+                />
+              </div>
+            </div>
+
             <div className="overflow-x-auto rounded border border-gray-200">
               <table className="w-full border-collapse">
                 <thead>
@@ -429,11 +482,13 @@ function App() {
                   <div className="text-center">
                     <div className="border-t border-gray-400 pt-2">
                       <p className="text-sm font-medium">Instructor's Signature</p>
+                      <p className="text-xs text-gray-500">{displayData.instructorName}</p>
                     </div>
                   </div>
                   <div className="text-center">
                     <div className="border-t border-gray-400 pt-2">
                       <p className="text-sm font-medium">HOD's Signature</p>
+                      <p className="text-xs text-gray-500">{displayData.hodName}</p>
                     </div>
                   </div>
                 </>
@@ -448,6 +503,7 @@ function App() {
                   <div className="text-center">
                     <div className="border-t border-gray-400 pt-2">
                       <p className="text-sm font-medium">HOD's Signature</p>
+                      <p className="text-xs text-gray-500">{displayData.hodName}</p>
                     </div>
                   </div>
                 </>
