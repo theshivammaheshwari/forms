@@ -336,7 +336,7 @@ function App() {
               )}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  HOD Name
+                  CSE HOD Name
                 </label>
                 <input
                   type="text"
@@ -474,7 +474,7 @@ function App() {
                   </div>
                   <div className="text-center">
                     <div className="border-t border-gray-400 pt-2">
-                      <p className="text-sm font-medium">HOD's Signature</p>
+                      <p className="text-sm font-medium">CSE HOD's Signature</p>
                       <p className="text-xs text-gray-500">{displayData.hodName}</p>
                     </div>
                   </div>
@@ -489,7 +489,7 @@ function App() {
                   </div>
                   <div className="text-center">
                     <div className="border-t border-gray-400 pt-2">
-                      <p className="text-sm font-medium">HOD's Signature</p>
+                      <p className="text-sm font-medium">CSE HOD's Signature</p>
                       <p className="text-xs text-gray-500">{displayData.hodName}</p>
                     </div>
                   </div>
@@ -504,7 +504,7 @@ function App() {
                   </div>
                   <div className="text-center">
                     <div className="border-t border-gray-400 pt-2">
-                      <p className="text-sm font-medium">HOD's Signature</p>
+                      <p className="text-sm font-medium">CSE HOD's Signature</p>
                       <p className="text-xs text-gray-500">{displayData.hodName}</p>
                     </div>
                   </div>
