@@ -536,17 +536,17 @@ function App() {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-900 text-white py-2 print:hidden mt-auto"
+        className="bg-gray-900 text-white py-4 print:hidden mt-auto"
       >
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div className="flex items-start gap-2">
-              <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
-              <p className="text-gray-400">
-                Rupa ki Nangal, Post-Sumel, Via, Jamdoli, Jaipur, Rajasthan 302031
-              </p>
-            </div>
-            <div className="flex flex-col space-y-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <div className="flex items-start gap-2">
+                <MapPin className="h-4 w-4 mt-1 flex-shrink-0" />
+                <p className="text-gray-400">
+                  Rupa ki Nangal, Post-Sumel, Via, Jamdoli, Jaipur, Rajasthan 302031
+                </p>
+              </div>
               <div className="flex flex-col space-y-1">
                 <p className="flex items-center text-gray-400">
                   <Phone className="h-4 w-4 mr-2" />
@@ -557,6 +557,14 @@ function App() {
                   smaheshwari@lnmiit.ac.in
                 </p>
               </div>
+            </div>
+            <div className="space-y-2">
+              <div className="text-gray-400">
+                <p>Developed by:</p>
+                <p className="font-medium text-purple-300">Mr. Shivam Maheshwari</p>
+                <p className="text-sm">Technical Superintendent, CSE Department</p>
+              </div>
+              <p className="text-sm text-gray-500">© {new Date().getFullYear()} The LNM Institute of Information Technology. All rights reserved.</p>
               <a
                 href="https://docs.google.com/spreadsheets/d/1V8fviZ4Qhoe_Xe_ml48XMBl3yjVEMouRbMxwZp63WZU/edit?usp=sharing"
                 target="_blank"
