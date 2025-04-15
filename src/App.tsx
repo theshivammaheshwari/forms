@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Printer, Plus, Minus, Send, FileSpreadsheet, GraduationCap, Phone, Mail, MapPin } from 'lucide-react';
+import { Printer, Plus, Minus, Send, FileSpreadsheet, GraduationCap, Phone, Mail, MapPin, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface FormData {
@@ -82,10 +82,29 @@ function App() {
     }
   };
 
+  const validateForm = () => {
+    if (!formData.email.endsWith('@lnmiit.ac.in')) {
+      setError('Email must be a valid LNMIIT email address (@lnmiit.ac.in)');
+      return false;
+    }
+    
+    if (!formData.mobile.match(/^\d{10}$/)) {
+      setError('Please enter a valid 10-digit mobile number');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
     setError(null);
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       const response = await fetch('https://script.google.com/macros/s/AKfycbz5UMlP23VRPQOzFz_nA17u3pLmgVVXOhJT70vD5qJyX_-Qabz6gxS2u6EK4sCtAnetrQ/exec', {
@@ -256,24 +275,34 @@ function App() {
                 )}
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Mobile No</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Mobile No <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="tel"
                   name="mobile"
                   value={displayData.mobile}
                   onChange={handleInputChange}
+                  placeholder="10-digit mobile number"
+                  pattern="[0-9]{10}"
+                  title="Please enter a valid 10-digit mobile number"
                   className="w-full p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300"
                   required
                   disabled={submitted}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email ID</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email ID <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="email"
                   name="email"
                   value={displayData.email}
                   onChange={handleInputChange}
+                  placeholder="username@lnmiit.ac.in"
+                  pattern=".+@lnmiit\.ac\.in$"
+                  title="Please enter a valid LNMIIT email address"
                   className="w-full p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300"
                   required
                   disabled={submitted}
@@ -459,15 +488,26 @@ function App() {
                 Rupa ki Nangal, Post-Sumel, Via, Jamdoli, Jaipur, Rajasthan 302031
               </p>
             </div>
-            <div className="flex flex-col space-y-1">
-              <p className="flex items-center text-gray-400">
-                <Phone className="h-4 w-4 mr-2" />
-                +91-9468955596
-              </p>
-              <p className="flex items-center text-gray-400">
-                <Mail className="h-4 w-4 mr-2" />
-                smaheshwari@lnmiit.ac.in
-              </p>
+            <div className="flex flex-col space-y-2">
+              <div className="flex flex-col space-y-1">
+                <p className="flex items-center text-gray-400">
+                  <Phone className="h-4 w-4 mr-2" />
+                  +91-9468955596
+                </p>
+                <p className="flex items-center text-gray-400">
+                  <Mail className="h-4 w-4 mr-2" />
+                  smaheshwari@lnmiit.ac.in
+                </p>
+              </div>
+              <a
+                href="https://docs.google.com/spreadsheets/d/1V8fviZ4Qhoe_Xe_ml48XMBl3yjVEMouRbMxwZp63WZU/edit?usp=sharing"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center text-purple-300 hover:text-purple-200 transition-colors"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                View Available Resources
+              </a>
             </div>
           </div>
         </div>
