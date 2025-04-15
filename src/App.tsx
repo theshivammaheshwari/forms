@@ -3,13 +3,13 @@ import { Printer, Plus, Minus, Send, FileSpreadsheet, GraduationCap, Phone, Mail
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface FormData {
-  userType: 'student' | 'faculty';
+  userType: 'student' | 'faculty' | 'staff';
   name: string;
   id: string;
   department: string;
   otherDepartment?: string;
   instructorName?: string;
-  hodName: string;
+  hodName?: string;
   email: string;
   mobile: string;
   items: Array<{
@@ -55,10 +55,8 @@ function App() {
     setFormData(prev => ({
       ...prev,
       [name]: value,
-      // Reset otherDepartment when department changes to a non-"Others" option
       ...(name === 'department' && value !== 'Others' && { otherDepartment: '' }),
-      // Reset instructor name when switching user type
-      ...(name === 'userType' && value === 'faculty' && { instructorName: '' })
+      ...(name === 'userType' && (value === 'faculty' || value === 'staff') && { instructorName: '' })
     }));
   };
 
@@ -96,16 +94,6 @@ function App() {
     
     if (!formData.mobile.match(/^\d{10}$/)) {
       setError('Please enter a valid 10-digit mobile number');
-      return false;
-    }
-
-    if (formData.userType === 'student' && !formData.instructorName?.trim()) {
-      setError('Please enter the instructor name');
-      return false;
-    }
-
-    if (!formData.hodName?.trim()) {
-      setError('Please enter the HOD name');
       return false;
     }
 
@@ -231,6 +219,7 @@ function App() {
                 >
                   <option value="student">Student</option>
                   <option value="faculty">Faculty</option>
+                  <option value="staff">Staff</option>
                 </select>
               </div>
               <div>
@@ -332,7 +321,7 @@ function App() {
               {formData.userType === 'student' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Instructor Name <span className="text-red-500">*</span>
+                    Instructor Name
                   </label>
                   <input
                     type="text"
@@ -341,14 +330,13 @@ function App() {
                     onChange={handleInputChange}
                     placeholder="Enter instructor's name"
                     className="w-full p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300"
-                    required
                     disabled={submitted}
                   />
                 </div>
               )}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  HOD Name <span className="text-red-500">*</span>
+                  HOD Name
                 </label>
                 <input
                   type="text"
@@ -357,7 +345,6 @@ function App() {
                   onChange={handleInputChange}
                   placeholder="Enter HOD's name"
                   className="w-full p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300"
-                  required
                   disabled={submitted}
                 />
               </div>
@@ -492,11 +479,26 @@ function App() {
                     </div>
                   </div>
                 </>
-              ) : (
+              ) : displayData.userType === 'faculty' ? (
                 <>
                   <div className="text-center col-span-2">
                     <div className="border-t border-gray-400 pt-2">
                       <p className="text-sm font-medium">Faculty's Signature</p>
+                      <p className="text-xs text-gray-500">{displayData.name}</p>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="border-t border-gray-400 pt-2">
+                      <p className="text-sm font-medium">HOD's Signature</p>
+                      <p className="text-xs text-gray-500">{displayData.hodName}</p>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="text-center col-span-2">
+                    <div className="border-t border-gray-400 pt-2">
+                      <p className="text-sm font-medium">Staff's Signature</p>
                       <p className="text-xs text-gray-500">{displayData.name}</p>
                     </div>
                   </div>
