@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Printer, Plus, Minus, Send, FileSpreadsheet, GraduationCap, Phone, Mail, MapPin, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -48,6 +48,29 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [printData, setPrintData] = useState<FormData | null>(null);
+  const [itemsList, setItemsList] = useState<string[]>([]);
+  const [isLoadingItems, setIsLoadingItems] = useState(true);
+  const [newItemName, setNewItemName] = useState('');
+
+  useEffect(() => {
+    fetchItems();
+  }, []);
+
+  const fetchItems = async () => {
+    try {
+      const response = await fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vS59bwEmTUVL04181VI7-4W5vWztF5PXZ3xqCH-kT2SWYPbtM_F0_P5YkLvAAx0y7QqOm0beHw_qN4n/pub?output=csv');
+      const text = await response.text();
+      const rows = text.split('\n').map(row => row.trim());
+      const items = rows.slice(1)
+        .map(row => row.split(',')[0].trim())
+        .filter(Boolean);
+      setItemsList(items);
+    } catch (error) {
+      console.error('Error fetching items:', error);
+    } finally {
+      setIsLoadingItems(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -82,6 +105,14 @@ function App() {
         ...formData,
         items: formData.items.filter((_, i) => i !== index)
       });
+    }
+  };
+
+  const handleNewItemSubmit = (index: number) => {
+    if (newItemName.trim()) {
+      setItemsList(prev => [...prev, newItemName.trim()]);
+      handleItemChange(index, 'name', newItemName.trim());
+      setNewItemName('');
     }
   };
 
@@ -164,17 +195,27 @@ function App() {
         className="bg-white shadow-sm print:shadow-none py-2"
       >
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center">
-            <motion.div
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.5 }}
-            >
-              <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600" />
-            </motion.div>
-            <div className="ml-3">
-              <h1 className="text-lg sm:text-xl font-bold text-gray-900">The LNM Institute of Information Technology</h1>
-              <p className="text-xs text-gray-500">Computer Science & Engineering</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <motion.div
+                whileHover={{ rotate: 360 }}
+                transition={{ duration: 0.5 }}
+              >
+                <GraduationCap className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600" />
+              </motion.div>
+              <div className="ml-3">
+                <h1 className="text-lg sm:text-xl font-bold text-gray-900">The LNM Institute of Information Technology</h1>
+                <p className="text-xs text-gray-500">Computer Science & Engineering</p>
+              </div>
             </div>
+            <motion.img
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              src="LNMIIT.png"
+              alt="LNMIIT Logo"
+              className="h-12 sm:h-16 w-auto object-contain"
+            />
           </div>
         </div>
       </motion.header>
@@ -387,14 +428,41 @@ function App() {
                       >
                         <td className="p-2 text-sm">{index + 1}</td>
                         <td className="p-2">
-                          <input
-                            type="text"
-                            value={item.name}
-                            onChange={(e) => handleItemChange(index, 'name', e.target.value)}
-                            className="w-full p-1 text-sm border rounded"
-                            required
-                            disabled={submitted}
-                          />
+                          <div className="relative">
+                            <select
+                              value={item.name}
+                              onChange={(e) => handleItemChange(index, 'name', e.target.value)}
+                              className="w-full p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300"
+                              required
+                              disabled={submitted}
+                            >
+                              <option value="">Select Item</option>
+                              {itemsList.map((itemName) => (
+                                <option key={itemName} value={itemName}>
+                                  {itemName}
+                                </option>
+                              ))}
+                              <option value="other">+ Add New Item</option>
+                            </select>
+                            {item.name === 'other' && !submitted && (
+                              <div className="mt-2 flex gap-2">
+                                <input
+                                  type="text"
+                                  value={newItemName}
+                                  onChange={(e) => setNewItemName(e.target.value)}
+                                  placeholder="Enter new item name"
+                                  className="flex-1 p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300"
+                                />
+                                <button
+                                  type="button"
+                                  onClick={() => handleNewItemSubmit(index)}
+                                  className="px-3 py-1 bg-purple-500 text-white text-sm rounded hover:bg-purple-600"
+                                >
+                                  Add
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </td>
                         <td className="p-2">
                           <input
@@ -404,6 +472,7 @@ function App() {
                             className="w-full p-1 text-sm border rounded"
                             required
                             disabled={submitted}
+                            min="1"
                           />
                         </td>
                         <td className="p-2 print:hidden">
