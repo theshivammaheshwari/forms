@@ -212,7 +212,7 @@ function App() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              src="LNMIIT.png"
+              src="https://raw.githubusercontent.com/theshivammaheshwari/forms/main/LNMIIT.png"
               alt="LNMIIT Logo"
               className="h-12 sm:h-16 w-auto object-contain"
             />
