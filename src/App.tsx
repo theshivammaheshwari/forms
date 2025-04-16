@@ -9,15 +9,13 @@ interface FormData {
   department: string;
   otherDepartment?: string;
   instructorName?: string;
-  hodName?: string;
   email: string;
   mobile: string;
+  issueDate: string;
+  returnDate: string;
   items: Array<{
     name: string;
     quantity: string;
-    issueDate: string;
-    returnDate: string;
-    remark: string;
   }>;
 }
 
@@ -40,10 +38,11 @@ function App() {
     department: '',
     otherDepartment: '',
     instructorName: '',
-    hodName: '',
     email: '',
     mobile: '',
-    items: [{ name: '', quantity: '', issueDate: '', returnDate: '', remark: '' }]
+    issueDate: '',
+    returnDate: '',
+    items: [{ name: '', quantity: '' }]
   });
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -73,7 +72,7 @@ function App() {
   const addItem = () => {
     setFormData({
       ...formData,
-      items: [...formData.items, { name: '', quantity: '', issueDate: '', returnDate: '', remark: '' }]
+      items: [...formData.items, { name: '', quantity: '' }]
     });
   };
 
@@ -146,10 +145,11 @@ function App() {
       department: '',
       otherDepartment: '',
       instructorName: '',
-      hodName: '',
       email: '',
       mobile: '',
-      items: [{ name: '', quantity: '', issueDate: '', returnDate: '', remark: '' }]
+      issueDate: '',
+      returnDate: '',
+      items: [{ name: '', quantity: '' }]
     });
   };
 
@@ -317,7 +317,7 @@ function App() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               {formData.userType === 'student' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -336,15 +336,29 @@ function App() {
               )}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  CSE HOD Name
+                  Issue Date
                 </label>
                 <input
-                  type="text"
-                  name="hodName"
-                  value={displayData.hodName}
+                  type="date"
+                  name="issueDate"
+                  value={displayData.issueDate}
                   onChange={handleInputChange}
-                  placeholder="Enter HOD's name"
                   className="w-full p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300"
+                  required
+                  disabled={submitted}
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Return Date
+                </label>
+                <input
+                  type="date"
+                  name="returnDate"
+                  value={displayData.returnDate}
+                  onChange={handleInputChange}
+                  className="w-full p-2 text-sm border rounded focus:ring-1 focus:ring-purple-300"
+                  required
                   disabled={submitted}
                 />
               </div>
@@ -357,9 +371,6 @@ function App() {
                     <th className="p-2 text-left text-xs font-medium text-gray-500">S.No</th>
                     <th className="p-2 text-left text-xs font-medium text-gray-500">Item Name</th>
                     <th className="p-2 text-left text-xs font-medium text-gray-500">Quantity</th>
-                    <th className="p-2 text-left text-xs font-medium text-gray-500">Issue Date</th>
-                    <th className="p-2 text-left text-xs font-medium text-gray-500">Return Date</th>
-                    <th className="p-2 text-left text-xs font-medium text-gray-500">Remark</th>
                     <th className="p-2 text-left text-xs font-medium text-gray-500 print:hidden">Actions</th>
                   </tr>
                 </thead>
@@ -392,35 +403,6 @@ function App() {
                             onChange={(e) => handleItemChange(index, 'quantity', e.target.value)}
                             className="w-full p-1 text-sm border rounded"
                             required
-                            disabled={submitted}
-                          />
-                        </td>
-                        <td className="p-2">
-                          <input
-                            type="date"
-                            value={item.issueDate}
-                            onChange={(e) => handleItemChange(index, 'issueDate', e.target.value)}
-                            className="w-full p-1 text-sm border rounded"
-                            required
-                            disabled={submitted}
-                          />
-                        </td>
-                        <td className="p-2">
-                          <input
-                            type="date"
-                            value={item.returnDate}
-                            onChange={(e) => handleItemChange(index, 'returnDate', e.target.value)}
-                            className="w-full p-1 text-sm border rounded"
-                            required
-                            disabled={submitted}
-                          />
-                        </td>
-                        <td className="p-2">
-                          <input
-                            type="text"
-                            value={item.remark}
-                            onChange={(e) => handleItemChange(index, 'remark', e.target.value)}
-                            className="w-full p-1 text-sm border rounded"
                             disabled={submitted}
                           />
                         </td>
@@ -475,7 +457,7 @@ function App() {
                   <div className="text-center">
                     <div className="border-t border-gray-400 pt-2">
                       <p className="text-sm font-medium">CSE HOD's Signature</p>
-                      <p className="text-xs text-gray-500">{displayData.hodName}</p>
+                      <p className="text-xs text-gray-500">Dr. Rajbir Kaur</p>
                     </div>
                   </div>
                 </>
@@ -490,7 +472,7 @@ function App() {
                   <div className="text-center">
                     <div className="border-t border-gray-400 pt-2">
                       <p className="text-sm font-medium">CSE HOD's Signature</p>
-                      <p className="text-xs text-gray-500">{displayData.hodName}</p>
+                      <p className="text-xs text-gray-500">Dr. Rajbir Kaur</p>
                     </div>
                   </div>
                 </>
@@ -505,7 +487,7 @@ function App() {
                   <div className="text-center">
                     <div className="border-t border-gray-400 pt-2">
                       <p className="text-sm font-medium">CSE HOD's Signature</p>
-                      <p className="text-xs text-gray-500">{displayData.hodName}</p>
+                      <p className="text-xs text-gray-500">Dr. Rajbir Kaur</p>
                     </div>
                   </div>
                 </>
