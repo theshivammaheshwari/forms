@@ -110,7 +110,7 @@ function App() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://script.google.com/macros/s/AKfycbz5UMlP23VRPQOzFz_nA17u3pLmgVVXOhJT70vD5qJyX_-Qabz6gxS2u6EK4sCtAnetrQ/exec', {
+      const response = await fetch('https://script.google.com/macros/s/AKfycbxlvyOMnSFpx8o7MWootzm20kBjC9OtsF8k9a_reAF9UZzd1u3t1TJ6ZOWDp8LZrK-wkg/exec', {
         method: 'POST',
         mode: 'no-cors',
         headers: {
